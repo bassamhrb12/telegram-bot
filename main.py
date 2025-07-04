@@ -27,7 +27,7 @@ except locale.Error:
     print("Warning: Arabic locale not available, using default")
 
 # --- الإعدادات الرئيسية ---
-TOKEN = "7758344981:AAH8DO0_pUZyGVMvep4ofCUzRp5dHVxrfFg"
+TOKEN = "7548804690:AAElviqQgr5-JnoQNKf2-cfFQkCpMpZOlZM"
 WATERMARK_TEXT = "صياد العروض"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FONT_PATH = os.path.join(BASE_DIR, "fonts", "Amiri-Regular.ttf")
