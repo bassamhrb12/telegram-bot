@@ -27,7 +27,7 @@ except locale.Error:
     print("Warning: Arabic locale not available, using default")
 
 # --- الإعدادات الرئيسية ---
-TOKEN = os.getenv("7758344981:AAGv-_mpqmJgt_-RAvrLLombhbQR8vmWqGc") or "YOUR_TELEGRAM_TOKEN"  # ضع التوكن هنا إذا لم تستخدم متغير بيئة
+TOKEN = os.getenv("TELEGRAM_TOKEN") or "YOUR_TELEGRAM_TOKEN" 
 WATERMARK_TEXT = "صياد العروض"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FONT_PATH = os.path.join(BASE_DIR, "fonts", "Amiri-Regular.ttf")
