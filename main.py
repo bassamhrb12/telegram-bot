@@ -54,20 +54,20 @@ def add_watermark(input_image_stream, font_color):
         draw = ImageDraw.Draw(txt_layer)
 
         # معالجة النص العربي
-        reshaped_text = arabic_reshaper.reshape(WATERMARK_TEXT)
+   reshaped_text = arabic_reshaper.reshape(WATERMARK_TEXT)
         bidi_text = get_display(reshaped_text)
 
         # تحميل الخط العربي
-        try:
+      try:
             font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
         except IOError:
-            # استخدام خط بديل إذا لم يوجد الخط الأساسي
-            print(f"Error: Font file not found at {FONT_PATH}, using fallback font")
             try:
                 font = ImageFont.truetype("DejaVuSans.ttf", FONT_SIZE)
             except:
-                font = ImageFont.load_default()
-
+                try:
+                    font = ImageFont.truetype("arial.ttf", FONT_SIZE)
+                except:
+                    font = ImageFont.load_default()
         # حساب حجم النص
         text_bbox = draw.textbbox((0, 0), bidi_text, font=font)
         text_width = text_bbox[2] - text_bbox[0]
