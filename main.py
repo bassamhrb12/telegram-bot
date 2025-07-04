@@ -27,10 +27,10 @@ except locale.Error:
     print("Warning: Arabic locale not available, using default")
 
 # --- الإعدادات الرئيسية ---
-TOKEN = os.getenv("TELEGRAM_TOKEN") or "YOUR_TELEGRAM_TOKEN"  # ضع التوكن هنا إذا لم تستخدم متغير بيئة
+TOKEN = os.getenv("7758344981:AAGv-_mpqmJgt_-RAvrLLombhbQR8vmWqGc") or "YOUR_TELEGRAM_TOKEN"  # ضع التوكن هنا إذا لم تستخدم متغير بيئة
 WATERMARK_TEXT = "صياد العروض"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FONT_PATH = os.path.join(BASE_DIR, "fonts", "Amiri-Bold.ttf")
+FONT_PATH = os.path.join(BASE_DIR, "fonts", "Amiri-Regular.ttf")
 FONT_SIZE = 60
 DEFAULT_FONT_COLOR = (0, 0, 0, 180)  # أسود مع شفافية
 TEXT_OUTLINE_COLOR = (255, 255, 255, 200)  # لون الحد الأبيض
