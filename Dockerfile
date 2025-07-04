@@ -1,5 +1,5 @@
 # 1. تحديد بيئة بايثون الأساسية
-FROM python:3.11-slim
+FROM python:3.11
 
 # 2. تثبيت مكتبة اللغة العربية الضرورية للنظام
 RUN apt-get update && apt-get install -y libraqm0
