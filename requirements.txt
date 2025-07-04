@@ -1,0 +1,12 @@
+python-telegram-bot==20.3
+Pillow
+telegram
+flask
+arabic-reshaper
+python-bidi
+arabic-reshaper
+python-bidi
+arabic-reshaper
+python-bidi
+arabic-reshaper
+python-bidi
