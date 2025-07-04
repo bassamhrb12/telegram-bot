@@ -1,7 +1,7 @@
 # استخدام صورة أساسية خفيفة
 FROM python:3.11-slim
 
-# تثبيت حزم النظام المطلوبة (بما في ذلك الخطوط العربية)
+# تثبيت حزم النظام المطلوبة
 RUN apt-get update && apt-get install -y \
     libraqm0 \
     libfreetype6 \
