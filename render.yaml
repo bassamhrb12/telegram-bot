@@ -1,8 +1,14 @@
 services:
   - type: web
     name: telegram-bot
-    env: python
+    runtime: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python main.py"
-    systemPackages:
-      - name: libraqm0
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+      - key: TELEGRAM_TOKEN
+        sync: false # هذا يمنع استبدال التوكن الذي تضعه في لوحة التحكم
+
+systemPackages:
+  - name: libraqm0
