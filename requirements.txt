@@ -1,5 +1,6 @@
-python-telegram-bot
-Pillow
-Flask
-arabic-reshaper
-python-bidi
+pillow==10.0.0
+python-telegram-bot==20.3
+arabic-reshaper==2.1.4
+python-bidi==0.4.2
+flask==2.2.3
+fonttools==4.39.3
