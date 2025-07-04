@@ -1,3 +1,5 @@
-python-telegram-bot
-Pillow
-Flask
+python-telegram-bot==20.3
+Pillow==10.0.0
+Flask==2.2.3
+arabic-reshaper==2.1.4
+python-bidi==0.4.2
