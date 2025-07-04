@@ -18,7 +18,7 @@ from bidi.algorithm import get_display
 # --- الإعدادات الرئيسية ---
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 WATERMARK_TEXT = "صياد العروض"
-FONT_PATH = "NotoSansArabic-Regular.ttf"
+FONT_PATH = "Amiri-Regular.ttf"
 FONT_SIZE = 35
 DEFAULT_FONT_COLOR = (0, 0, 0, 128) # اللون الافتراضي أسود
 
