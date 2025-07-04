@@ -27,13 +27,12 @@ except locale.Error:
     print("Warning: Arabic locale not available, using default")
 
 # --- الإعدادات الرئيسية ---
-TOKEN = os.getenv("TELEGRAM_TOKEN")
+TOKEN = os.getenv("TELEGRAM_TOKEN") or "YOUR_TELEGRAM_TOKEN"  # ضع التوكن هنا إذا لم تستخدم متغير بيئة
 WATERMARK_TEXT = "صياد العروض"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FONT_PATH = os.path.join(BASE_DIR, "fonts", "Amiri-Bold.ttf")  # خط عربي ثقيل
+FONT_PATH = os.path.join(BASE_DIR, "fonts", "Amiri-Bold.ttf")
 FONT_SIZE = 60
 DEFAULT_FONT_COLOR = (0, 0, 0, 180)  # أسود مع شفافية
-BACKGROUND_COLOR = (255, 255, 255, 0)  # خلفية شفافة
 TEXT_OUTLINE_COLOR = (255, 255, 255, 200)  # لون الحد الأبيض
 
 # --- خادم الويب ---
@@ -41,7 +40,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return "Bot is running!"
+    return "البوت يعمل بشكل صحيح! ✅"
 
 def run_flask():
     app.run(host='0.0.0.0', port=8080)
@@ -61,7 +60,9 @@ def create_text_watermark(text, font_path, font_size, font_color, outline_color)
         try:
             font = ImageFont.truetype("DejaVuSans-Bold.ttf", font_size)
         except:
+            # استخدام خط افتراضي
             font = ImageFont.load_default()
+            print("استخدام الخط الافتراضي لعدم توفر الخط العربي")
     
     # حساب حجم النص
     temp_img = Image.new('RGBA', (1, 1), (0, 0, 0, 0))
@@ -71,7 +72,7 @@ def create_text_watermark(text, font_path, font_size, font_color, outline_color)
     text_height = text_bbox[3] - text_bbox[1]
     
     # إنشاء صورة شفافة بحجم النص
-    watermark = Image.new('RGBA', (int(text_width * 1.2), int(text_height * 1.5)), BACKGROUND_COLOR)
+    watermark = Image.new('RGBA', (int(text_width * 1.2), int(text_height * 1.5)), (0, 0, 0, 0))
     draw = ImageDraw.Draw(watermark)
     
     # إضافة تأثير الظل (الحد الأبيض)
@@ -119,8 +120,8 @@ def add_watermark(input_image_stream, font_color):
         
         # حساب عدد المرات لتكرار العلامة المائية
         wm_width, wm_height = text_watermark.size
-        cols = base_image.width // wm_width + 1
-        rows = base_image.height // wm_height + 1
+        cols = (base_image.width // wm_width) + 2
+        rows = (base_image.height // wm_height) + 2
         
         # وضع العلامة المائية بشكل متكرر مع دوران عشوائي
         for i in range(cols):
@@ -133,8 +134,8 @@ def add_watermark(input_image_stream, font_color):
                 rotated_wm = wm_copy.rotate(angle, expand=True, resample=Image.BICUBIC, fillcolor=(0, 0, 0, 0))
                 
                 # حساب الموضع مع إزاحة عشوائية
-                x = i * wm_width + random.randint(-50, 50)
-                y = j * wm_height + random.randint(-50, 50)
+                x = i * wm_width + random.randint(-int(wm_width/2), int(wm_width/2))
+                y = j * wm_height + random.randint(-int(wm_height/2), int(wm_height/2))
                 
                 # لصق العلامة المائية في الطبقة
                 watermark_layer.paste(rotated_wm, (x, y), rotated_wm)
@@ -153,7 +154,7 @@ def add_watermark(input_image_stream, font_color):
         output_stream.seek(0)
         return output_stream
     except Exception as e:
-        print(f"Error processing image: {e}")
+        print(f"خطأ في معالجة الصورة: {e}")
         import traceback
         traceback.print_exc()
         return None
@@ -165,9 +166,16 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 وظيفتي هي إضافة العلامة المائية "صياد العروض" على أي صورة ترسلها لي للحفاظ على حقوقك.
 
-**كيف تستخدم البوت؟**
-- أرسل صورة مباشرةً لوضع العلامة المائية عليها باللون الافتراضي (أسود).
-- لتغيير لون العلامة المائية، استخدم الأمر /color.
+⚙️ **كيف تستخدم البوت؟**
+1. أرسل صورة مباشرةً لوضع العلامة المائية عليها باللون الافتراضي (أسود).
+2. استخدم الأمر /color لتغيير لون العلامة المائية.
+3. استقبل صورتك مع العلامة المائية المضافة!
+
+✨ مميزات البوت:
+- دعم كامل للغة العربية
+- علامة مائية متعددة الألوان
+- جودة عالية للصور
+- سرعة في الأداء
 """
     await update.message.reply_text(welcome_message)
 
@@ -180,10 +188,14 @@ async def color_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [
             InlineKeyboardButton("🔵 أزرق", callback_data='color_blue'),
             InlineKeyboardButton("🟢 أخضر", callback_data='color_green')
+        ],
+        [
+            InlineKeyboardButton("🟣 بنفسجي", callback_data='color_purple'),
+            InlineKeyboardButton("🟠 برتقالي", callback_data='color_orange')
         ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text("اختر لون العلامة المائية:", reply_markup=reply_markup)
+    await update.message.reply_text("🎨 اختر لون العلامة المائية:", reply_markup=reply_markup)
 
 async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -193,7 +205,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         'color_black': {'name': 'الأسود', 'value': (0, 0, 0, 180)},
         'color_red': {'name': 'الأحمر', 'value': (255, 0, 0, 180)},
         'color_blue': {'name': 'الأزرق', 'value': (0, 0, 255, 180)},
-        'color_green': {'name': 'الأخضر', 'value': (0, 128, 0, 180)}
+        'color_green': {'name': 'الأخضر', 'value': (0, 128, 0, 180)},
+        'color_purple': {'name': 'البنفسجي', 'value': (128, 0, 128, 180)},
+        'color_orange': {'name': 'البرتقالي', 'value': (255, 165, 0, 180)}
     }
 
     choice = query.data
@@ -208,6 +222,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         font_color = context.user_data.get('font_color', DEFAULT_FONT_COLOR)
         
+        # الحصول على الصورة بدقة عالية
         photo_file = await context.bot.get_file(update.message.photo[-1].file_id)
         input_stream = io.BytesIO()
         await photo_file.download_to_memory(input_stream)
@@ -218,14 +233,14 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if watermarked_photo_stream:
             await update.message.reply_photo(
                 photo=watermarked_photo_stream, 
-                caption="✅ تمت إضافة الحقوق بنجاح!",
+                caption="✅ تمت إضافة الحقوق بنجاح!\nصياد العروض",
                 filename="watermarked.jpg"
             )
         else:
-            await update.message.reply_text("❌ عذراً، حدث خطأ أثناء إضافة الحقوق.")
+            await update.message.reply_text("❌ عذراً، حدث خطأ أثناء إضافة الحقوق. يرجى المحاولة لاحقاً.")
     except Exception as e:
-        print(f"Error handling photo: {e}")
-        await update.message.reply_text("⚠️ حدث خطأ غير متوقع أثناء المعالجة.")
+        print(f"خطأ في معالجة الصورة: {str(e)}")
+        await update.message.reply_text("⚠️ حدث خطأ غير متوقع. يرجى إرسال صورة أخرى أو المحاولة لاحقاً.")
     finally:
         # حذف رسالة التحميل
         try:
@@ -234,29 +249,37 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 message_id=loading_msg.message_id
             )
         except:
-            pass
+            print("تعذر حذف رسالة التحميل")
 
 # --- الدالة الرئيسية لتشغيل البوت ---
 def main():
-    if not TOKEN:
-        print("Fatal Error: TELEGRAM_TOKEN not found.")
+    # فحص وجود التوكن
+    if not TOKEN or TOKEN == "YOUR_TELEGRAM_TOKEN":
+        print("خطأ: لم يتم تعيين رمز البوت!")
+        print("الرجاء تعيين متغير البيئة TELEGRAM_TOKEN أو تعديل الكود")
         return
 
     # بدء خادم الويب في خيط منفصل
     flask_thread = threading.Thread(target=run_flask, daemon=True)
     flask_thread.start()
 
-    print("Bot is running...")
+    print("جارٍ تشغيل البوت...")
+    print(f"اسم البوت: صياد العروض")
+    print(f"إصدار البوت: 2.0")
+    print(f"دعم اللغة العربية: ✔️")
+    
     application = Application.builder().token(TOKEN).build()
 
     # إضافة معالجات الأوامر
     application.add_handler(CommandHandler("start", start_command))
     application.add_handler(CommandHandler("color", color_command))
+    application.add_handler(CommandHandler("help", start_command))
     application.add_handler(CallbackQueryHandler(button_callback))
     application.add_handler(MessageHandler(filters.PHOTO, handle_photo))
 
     # بدء استقبال التحديثات
     application.run_polling()
+    print("تم إيقاف البوت")
 
 if __name__ == '__main__':
     main()
